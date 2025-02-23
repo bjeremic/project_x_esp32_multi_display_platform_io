@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "testEsp32_wifi_udp_free_rtos",
+			"path": "../../testEsp32_wifi_udp_free_rtos"
+		},
+		{
+			"name": "testEsp32_wifi_udp",
+			"path": "../../testEsp32_wifi_udp"
+		},
+		{
+			"name": "testEsp32_wifi_connect",
+			"path": "../../testEsp32_wifi_connect"
+		},
+		{
+			"name": "testEsp32_wifi_scanner",
+			"path": "../../testEsp32_wifi_scanner"
+		},
+		{
+			"name": "testEsp32_C2_multiple",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

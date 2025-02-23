@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../../vsCode/testPython"
+		},
+		{
+			"name": "testEsp32",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
