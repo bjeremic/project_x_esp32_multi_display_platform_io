@@ -379,4 +379,3 @@ void displayLayoutsOnScreens(layoutSelectionStack &lss) {
 void loop() {
   displayLayoutsOnScreens(layoutSelectionDefault[0]);
 }
-
