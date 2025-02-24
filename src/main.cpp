@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 
-#define SCREEN_TOGGLE_MILLISEC 2000
+#define SCREEN_TOGGLE_MILLISEC  250   // milliseconds
 
 #include <SPI.h>
 #include <Wire.h>
@@ -117,6 +117,24 @@ struct dataErg {
 
 
 dataErg myDataErg;
+
+enum displayer {ONEONE, ONETWO, PM5ONE};
+
+struct layoutSelection {
+  displayer screenOne;
+  displayer screenTwo;
+  u_int8_t multiple;
+};
+
+struct layoutSelectionStack {
+  layoutSelection one;
+  layoutSelection two;
+  layoutSelection three;
+  layoutSelection four;
+  layoutSelection five;
+};
+
+layoutSelectionStack  myLSS;
 // #####################
 // #################################
 
@@ -233,7 +251,6 @@ void drawLayoutOneOne(Adafruit_SSD1306 &screen) {
 }
 
 void drawLayoutOneTwo(Adafruit_SSD1306 &screen) {
-  screen.clearDisplay();
   drawLinesLayoutOne(screen);
   drawSplitMainLayoutOneOne(screen, F("cr"), myDataErg.split, 25);
   drawOneOneMarginSplitAverage(screen, F("av"), myDataErg.splitAv);
@@ -241,6 +258,7 @@ void drawLayoutOneTwo(Adafruit_SSD1306 &screen) {
   drawMetersLayoutOne(screen);
   drawSpmLayoutOne(screen);
   screen.display();
+  screen.clearDisplay();  // this clears the mem buffer, but it does not clear the screen
 }
 
 void drawLinesLayoutPM5One(Adafruit_SSD1306 &screen) {
@@ -284,6 +302,25 @@ void initData() {
 //   Serial.printf("UDP server : %s:%i \n", WiFi.localIP().toString().c_str(), localUdpPort);
 // }
 
+void initializeDisplayScreenInfo() {
+  myLSS.one.screenOne = ONEONE;
+  myLSS.one.screenTwo = ONETWO;
+  myLSS.one.multiple = 1;
+  myLSS.two.screenOne = PM5ONE;
+  myLSS.two.screenTwo = PM5ONE;
+  myLSS.two.multiple = 1;
+  myLSS.three.screenOne = ONEONE;
+  myLSS.three.screenTwo = ONETWO;
+  myLSS.three.multiple = 1;
+  myLSS.four.screenOne = ONETWO;
+  myLSS.four.screenTwo = ONEONE;
+  myLSS.four.multiple = 1;
+  myLSS.five.screenOne = ONEONE;
+  myLSS.five.screenTwo = PM5ONE;
+  myLSS.five.multiple = 1;
+}
+
+
 void setup() {
   Serial.begin(115200);
   //################
@@ -300,6 +337,7 @@ void setup() {
   screen_two.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS_TWO);  // THERE IS A PROBLEM TURNING ON THE SECOND DISPLAY
   // 
   initData();
+  initializeDisplayScreenInfo();
 }
 
 
@@ -307,25 +345,32 @@ void crank(uint8_t addition) {
   myDataErg.meters += addition;
 }
 
+void delayScreenToggleMultiplier(uint8_t multiple) {
+  delay(SCREEN_TOGGLE_MILLISEC * multiple);
+}
+
+void displayLayoutOnSingleScreen(displayer layoutChoice, Adafruit_SSD1306 &screen) {
+  if(layoutChoice == ONEONE)       {drawLayoutOneOne(screen);}
+  else if(layoutChoice == ONETWO)  {drawLayoutOneTwo(screen);}
+  else if(layoutChoice == PM5ONE)  {drawLayoutPM5One(screen);}
+}
+
+void displayLayoutsOnScreens(layoutSelection &ls) {
+  displayLayoutOnSingleScreen(ls.screenOne, screen_one);  
+  displayLayoutOnSingleScreen(ls.screenTwo, screen_two);
+  delayScreenToggleMultiplier(ls.multiple);
+}
+
+void displayLayoutSequence() {
+  displayLayoutsOnScreens(myLSS.one);
+  displayLayoutsOnScreens(myLSS.two);
+  displayLayoutsOnScreens(myLSS.three);
+  displayLayoutsOnScreens(myLSS.four);
+  displayLayoutsOnScreens(myLSS.five);
+}
+
+
 void loop() {
-  // i is multiple of SCREEN_TOGGLE_MILLISEC
-  for (int i = 0; i <= 2; i++) {
-    crank(i);
-    //drawOneOneDisplay(false);
-    //drawTwoOneDisplay(false);
-    drawLayoutPM5One(screen_one);
-    drawLayoutOneOne(screen_two);
-    delay(SCREEN_TOGGLE_MILLISEC);
-    drawLayoutPM5One(screen_two);    
-    drawLayoutOneOne(screen_one);
-    delay(SCREEN_TOGGLE_MILLISEC);
-  };
-  // for (int i = 0; i <= 2; i++) {
-  //   crank(i);
-  //   drawLayoutOneOne(screen_one);
-  //   delay(SCREEN_TOGGLE_MILLISEC);
-  //   //drawLayoutOneTwo(screen_one);
-  //   //delay(SCREEN_TOGGLE_MILLISEC);    
-  // };
+  displayLayoutSequence();
 }
 
