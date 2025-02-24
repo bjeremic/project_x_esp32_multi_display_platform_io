@@ -132,9 +132,16 @@ struct layoutSelectionStack {
   layoutSelection three;
   layoutSelection four;
   layoutSelection five;
+  layoutSelection six;
 };
 
-layoutSelectionStack  myLSS;
+struct layoutSelectionStacks {
+  layoutSelectionStack defaultOne;
+  layoutSelectionStack userOne;
+  layoutSelectionStack userTwo;
+};
+
+layoutSelectionStacks myLssStacks;
 // #####################
 // #################################
 
@@ -303,21 +310,21 @@ void initData() {
 // }
 
 void initializeDisplayScreenInfo() {
-  myLSS.one.screenOne = ONEONE;
-  myLSS.one.screenTwo = ONETWO;
-  myLSS.one.multiple = 1;
-  myLSS.two.screenOne = PM5ONE;
-  myLSS.two.screenTwo = PM5ONE;
-  myLSS.two.multiple = 1;
-  myLSS.three.screenOne = ONEONE;
-  myLSS.three.screenTwo = ONETWO;
-  myLSS.three.multiple = 1;
-  myLSS.four.screenOne = ONETWO;
-  myLSS.four.screenTwo = ONEONE;
-  myLSS.four.multiple = 1;
-  myLSS.five.screenOne = ONEONE;
-  myLSS.five.screenTwo = PM5ONE;
-  myLSS.five.multiple = 1;
+  myLssStacks.defaultOne.one.screenOne = ONEONE;
+  myLssStacks.defaultOne.one.screenTwo = ONETWO;
+  myLssStacks.defaultOne.one.multiple = 1;
+  myLssStacks.defaultOne.two.screenOne = PM5ONE;
+  myLssStacks.defaultOne.two.screenTwo = PM5ONE;
+  myLssStacks.defaultOne.two.multiple = 1;
+  myLssStacks.defaultOne.three.screenOne = ONEONE;
+  myLssStacks.defaultOne.three.screenTwo = ONETWO;
+  myLssStacks.defaultOne.three.multiple = 1;
+  myLssStacks.defaultOne.four.screenOne = ONETWO;
+  myLssStacks.defaultOne.four.screenTwo = ONEONE;
+  myLssStacks.defaultOne.four.multiple = 1;
+  myLssStacks.defaultOne.five.screenOne = ONEONE;
+  myLssStacks.defaultOne.five.screenTwo = PM5ONE;
+  myLssStacks.defaultOne.five.multiple = 1;
 }
 
 
@@ -361,16 +368,17 @@ void displayLayoutsOnScreens(layoutSelection &ls) {
   delayScreenToggleMultiplier(ls.multiple);
 }
 
-void displayLayoutSequence() {
-  displayLayoutsOnScreens(myLSS.one);
-  displayLayoutsOnScreens(myLSS.two);
-  displayLayoutsOnScreens(myLSS.three);
-  displayLayoutsOnScreens(myLSS.four);
-  displayLayoutsOnScreens(myLSS.five);
+void displayLayoutSequence(layoutSelectionStack lss) {
+  displayLayoutsOnScreens(lss.one);
+  displayLayoutsOnScreens(lss.two);
+  displayLayoutsOnScreens(lss.three);
+  displayLayoutsOnScreens(lss.four);
+  displayLayoutsOnScreens(lss.five);
+  displayLayoutsOnScreens(lss.six);
 }
 
 
 void loop() {
-  displayLayoutSequence();
+  displayLayoutSequence(myLssStacks.defaultOne);
 }
 
