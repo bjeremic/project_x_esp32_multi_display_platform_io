@@ -135,13 +135,9 @@ struct layoutSelectionStack {
   layoutSelection six;
 };
 
-struct layoutSelectionStacks {
-  layoutSelectionStack defaultOne;
-  layoutSelectionStack userOne;
-  layoutSelectionStack userTwo;
-};
+layoutSelectionStack layoutSelectionDefault[3];
+//layoutSelectionStack* layoutSelectionUser[6];
 
-layoutSelectionStacks myLssStacks;
 // #####################
 // #################################
 
@@ -309,22 +305,25 @@ void initData() {
 //   Serial.printf("UDP server : %s:%i \n", WiFi.localIP().toString().c_str(), localUdpPort);
 // }
 
-void initializeDisplayScreenInfo() {
-  myLssStacks.defaultOne.one.screenOne = ONEONE;
-  myLssStacks.defaultOne.one.screenTwo = ONETWO;
-  myLssStacks.defaultOne.one.multiple = 1;
-  myLssStacks.defaultOne.two.screenOne = PM5ONE;
-  myLssStacks.defaultOne.two.screenTwo = PM5ONE;
-  myLssStacks.defaultOne.two.multiple = 1;
-  myLssStacks.defaultOne.three.screenOne = ONEONE;
-  myLssStacks.defaultOne.three.screenTwo = ONETWO;
-  myLssStacks.defaultOne.three.multiple = 1;
-  myLssStacks.defaultOne.four.screenOne = ONETWO;
-  myLssStacks.defaultOne.four.screenTwo = ONEONE;
-  myLssStacks.defaultOne.four.multiple = 1;
-  myLssStacks.defaultOne.five.screenOne = ONEONE;
-  myLssStacks.defaultOne.five.screenTwo = PM5ONE;
-  myLssStacks.defaultOne.five.multiple = 1;
+void initializeDisplayScreenInfoDefault() {
+  layoutSelectionDefault[0].one.screenOne = ONEONE;
+  layoutSelectionDefault[0].one.screenTwo = ONETWO;
+  layoutSelectionDefault[0].one.multiple = 10;
+  layoutSelectionDefault[0].two.screenOne = PM5ONE;
+  layoutSelectionDefault[0].two.screenTwo = PM5ONE;
+  layoutSelectionDefault[0].two.multiple = 10;
+  layoutSelectionDefault[0].three.screenOne = ONEONE;
+  layoutSelectionDefault[0].three.screenTwo = ONETWO;
+  layoutSelectionDefault[0].three.multiple = 10;
+  layoutSelectionDefault[0].four.screenOne = ONETWO;
+  layoutSelectionDefault[0].four.screenTwo = ONEONE;
+  layoutSelectionDefault[0].four.multiple = 10;
+  layoutSelectionDefault[0].five.screenOne = ONEONE;
+  layoutSelectionDefault[0].five.screenTwo = PM5ONE;
+  layoutSelectionDefault[0].five.multiple = 10;
+  layoutSelectionDefault[0].six.screenOne = ONETWO;
+  layoutSelectionDefault[0].six.screenTwo = ONEONE;
+  layoutSelectionDefault[0].six.multiple = 50;
 }
 
 
@@ -344,7 +343,7 @@ void setup() {
   screen_two.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS_TWO);  // THERE IS A PROBLEM TURNING ON THE SECOND DISPLAY
   // 
   initData();
-  initializeDisplayScreenInfo();
+  initializeDisplayScreenInfoDefault();
 }
 
 
@@ -362,23 +361,21 @@ void displayLayoutOnSingleScreen(displayer layoutChoice, Adafruit_SSD1306 &scree
   else if(layoutChoice == PM5ONE)  {drawLayoutPM5One(screen);}
 }
 
-void displayLayoutsOnScreens(layoutSelection &ls) {
-  displayLayoutOnSingleScreen(ls.screenOne, screen_one);  
-  displayLayoutOnSingleScreen(ls.screenTwo, screen_two);
-  delayScreenToggleMultiplier(ls.multiple);
+void displayLayoutOnScreens(layoutSelection &ls) {
+    displayLayoutOnSingleScreen(ls.screenOne, screen_one); 
+    displayLayoutOnSingleScreen(ls.screenTwo, screen_two);
+    delayScreenToggleMultiplier(ls.multiple);
 }
 
-void displayLayoutSequence(layoutSelectionStack lss) {
-  displayLayoutsOnScreens(lss.one);
-  displayLayoutsOnScreens(lss.two);
-  displayLayoutsOnScreens(lss.three);
-  displayLayoutsOnScreens(lss.four);
-  displayLayoutsOnScreens(lss.five);
-  displayLayoutsOnScreens(lss.six);
+void displayLayoutsOnScreens(layoutSelectionStack &lss) {
+   displayLayoutOnScreens(lss.one);
+   displayLayoutOnScreens(lss.two);
+   displayLayoutOnScreens(lss.three);
+   displayLayoutOnScreens(lss.four);
+   displayLayoutOnScreens(lss.five);
+   displayLayoutOnScreens(lss.six);
 }
-
 
 void loop() {
-  displayLayoutSequence(myLssStacks.defaultOne);
+  displayLayoutsOnScreens(layoutSelectionDefault[0]);
 }
-
