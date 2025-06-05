@@ -3,7 +3,7 @@
 ## PM5 PDF
 [pm5.pdf](https://github.com/user-attachments/files/20614752/pm5.pdf)
 ## PM5 Link to C2
-[httpswww.concept2.comsupportmonitorspm5how-to-use.txt](https://github.com/user-attachments/files/20614753/httpswww.concept2.comsupportmonitorspm5how-to-use.txt)
+[https://www.concept2.comsupportmonitorspm5how-to-use](https://github.com/user-attachments/files/20614753/httpswww.concept2.comsupportmonitorspm5how-to-use.txt)
 ### PM5 Paceboat
 ![PM3_paceboat](https://github.com/user-attachments/assets/c4139ab4-3456-4f1d-8b30-233c5de8353c)
 ### PM5 Largeprint
